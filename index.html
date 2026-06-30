@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Tra Cứu Điểm Thi THPT Quốc Gia 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #FEF7FF;
+            color: #1D1B20;
+        }
+        .m3-card {
+            background-color: #F7F2FA;
+            border-radius: 28px;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+        }
+        .m3-input {
+            background-color: #ECE6F0;
+            border-bottom: 2px solid #79747E;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .m3-input:focus {
+            border-bottom: 2px solid #6750A4;
+            background-color: #E6E1E5;
+            outline: none;
+        }
+        .m3-btn {
+            background-color: #6750A4;
+            color: #FFFFFF;
+            border-radius: 100px;
+            transition: box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .m3-btn:hover {
+            background-color: #7965B7;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        .m3-btn:disabled {
+            background-color: #E3E1E6;
+            color: #939094;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="w-full py-6 px-4 bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-xl font-bold tracking-tight text-[#6750A4]">BỘ GIÁO DỤC VÀ ĐÀO TẠO</h1>
+                <p class="text-sm text-gray-600 font-medium">Hệ thống tra cứu điểm thi tốt nghiệp THPT Quốc gia 2026</p>
+            </div>
+            <div id="server-clock-container" class="text-sm bg-[#EADDFF] text-[#21005D] px-4 py-2 rounded-full font-medium">
+                Đang đồng bộ thời gian...
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl">
+            
+            <div id="lock-screen" class="m3-card p-8 text-center shadow-md hidden">
+                <div class="w-16 h-16 bg-[#EADDFF] rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-[#6750A4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-[#1D1B20] mb-4">Hệ thống chưa mở thời gian tra cứu</h2>
+                <p class="text-[#49454F] text-lg font-medium mb-2" id="countdown-text">Thời gian công bố: 08:00 AM ngày 16/07/2026</p>
+                <div class="text-sm text-gray-500 bg-white/50 py-3 px-4 rounded-xl inline-block mt-4 border border-gray-100">
+                    Hãy đợi nhé! Chúc các bạn nhận được điểm như ước nguyện
+                </div>
+            </div>
+
+            <div id="search-screen" class="m3-card p-8 shadow-md hidden">
+                <h2 class="text-xl font-bold text-[#1D1B20] mb-6 border-b border-gray-300 pb-3">Tra cứu kết quả thi</h2>
+                
+                <form id="search-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex flex-col">
+                            <label for="province" class="text-xs font-medium text-[#49454F] mb-1 px-1">Tỉnh / Thành phố hội đồng thi</label>
+                            <select id="province" class="m3-input h-14 px-3 text-base text-[#1D1B20] w-full" required>
+                                <option value="" disabled selected hidden>Chọn Tỉnh/Thành phố</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex flex-col">
+                            <label for="sbd" class="text-xs font-medium text-[#49454F] mb-1 px-1">Số báo danh</label>
+                            <input type="text" id="sbd" maxlength="8" placeholder="Ví dụ: 01000001" class="m3-input h-14 px-3 text-base text-[#1D1B20] w-full tracking-wider font-semibold" required>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center py-2">
+                        <div id="turnstile-container"></div>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center gap-4">
+                        <button type="submit" id="btn-submit" class="m3-btn ripple w-full md:w-48 h-10 font-medium text-sm shadow-sm flex items-center justify-center">
+                            <span>Tra cứu điểm</span>
+                        </button>
+                        
+                        <div id="loader" class="hidden flex flex-col items-center">
+                            <div class="w-8 h-8 border-4 border-[#6750A4] border-t-transparent rounded-full animate-spin mb-2"></div>
+                            <span class="text-xs text-[#49454F]">Đang kết nối đến cơ sở dữ liệu quốc gia...</span>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="result-container" class="mt-8 hidden border-t border-gray-300 pt-6">
+                    <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                        <div class="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-100 pb-3 gap-2">
+                            <div>
+                                <h3 class="text-base font-bold text-gray-600">Thí sinh: <span id="res-sbd" class="text-[#6750A4] text-lg font-bold"></span></h3>
+                                <p class="text-xs text-gray-500">Hội đồng thi: <span id="res-province" class="font-medium text-gray-700"></span></p>
+                            </div>
+                            <div class="text-xs text-gray-400 font-mono" id="res-timestamp"></div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-gray-200 text-xs text-[#49454F] font-bold">
+                                        <th class="py-3 px-4 bg-gray-50 rounded-tl-xl">Môn học</th>
+                                        <th class="py-3 px-4 bg-gray-50 text-right rounded-tr-xl">Điểm số</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="score-table-body" class="text-sm text-[#1D1B20]">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="error-container" class="mt-4 hidden p-4 bg-[#F9DEDC] border border-[#B3261E] rounded-xl text-[#B3261E] text-sm font-medium text-center">
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="w-full py-4 text-center text-xs text-[#49454F] bg-white border-t border-gray-200">
+        Phát triển và vận hành bởi Đội ngũ Kiến trúc Hệ thống. Dữ liệu đồng bộ trực tiếp với Cổng thông tin của Bộ Giáo dục & Đào tạo.
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
