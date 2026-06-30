@@ -3,9 +3,9 @@ const CONFIG = {
     // Thời gian công bố điểm chính thức: 08:00 AM ngày 16/07/2026 Múi giờ Việt Nam (UTC+7)
     RELEASE_DATE_UTC7: new Date('2026-07-16T08:00:00+07:00'),
     // Địa chỉ Worker API của bạn trên Cloudflare
-    API_ENDPOINT: 'https://thpt-api-2026.YOUR-SUBDOMAIN.workers.dev/api/lookup',
+    API_ENDPOINT: 'https://tradiemthptqg.anntuongg.workers.dev/api/lookup',
     // Site Key của Cloudflare Turnstile cấp cho Frontend tĩnh
-    TURNSTILE_SITEKEY: '1x00000000000000000000AA' 
+    TURNSTILE_SITEKEY: '0x4AAAAAADtg_d8LBGzrMD_y' 
 };
 
 // Danh sách 63 Tỉnh Thành Việt Nam theo mã quy chuẩn thi THPT Quốc Gia
