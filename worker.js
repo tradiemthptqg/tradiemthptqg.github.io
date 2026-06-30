@@ -3,7 +3,7 @@ addEventListener('fetch', event => {
 })
 
 // Cấu hình Khóa Bí mật của Turnstile (Lưu ý: Thực tế nên khai báo trong Settings -> Variables của Worker)
-const TURNSTILE_SECRET_KEY = "0x4AAAAAAAMe-YOUR-SECRET-KEY-HERE";
+const TURNSTILE_SECRET_KEY = "0x4AAAAAADtg_V5ETNlMliajIRgC8hi2Lro";
 
 // Tiêu đề CORS chuẩn hỗ trợ cho GitHub Pages gọi an toàn
 const corsHeaders = {
